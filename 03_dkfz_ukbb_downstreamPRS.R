@@ -187,7 +187,7 @@ make_prs_quantile <- function(score,
     breaks = breaks,
     include.lowest = TRUE,
     labels = labels,
-    ordered_result = TRUE
+    ordered_result = FALSE
   )
 }
 
