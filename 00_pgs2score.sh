@@ -7,19 +7,27 @@ set -euo pipefail
 # Usage:
 #   bash 00_pgs2score.sh <PGS_ID> [BUILD] [OUT_DIR]
 #
-# Example:
+# Examples:
+#
+# Single PGS:
 #   bash 00_pgs2score.sh PGS000083 GRCh37 scores
 #
+# Multiple PGS IDs:
+#   for PGS_ID in PGS000083 PGS000018 PGS000021; do
+#     bash 00_pgs2score.sh "$PGS_ID" GRCh37 scores
+#   done
+#
+# Multiple PGS IDs from a text file, one ID per line:
+#   while read -r PGS_ID; do
+#     [ -z "$PGS_ID" ] && continue
+#     bash 00_pgs2score.sh "$PGS_ID" GRCh37 scores
+#   done < pgs_ids.txt
+#
 # Output:
-#   scores/PGS000083/PGS000083_beta.csv
+#   scores/<PGS_ID>/<PGS_ID>_beta.csv
 #
 # Expected output columns:
 #   rsid,chr_name,chr_position,effect_allele,noneffect_allele,Beta,eaf,chr_pos
-#
-# Notes:
-#   - BUILD defaults to GRCh37.
-#   - The script downloads from the Harmonized PGS Catalog FTP directory.
-#   - For harmonized files, hm_chr/hm_pos/hm_rsID are used when available.
 #############################################################################
 
 if [ "$#" -lt 1 ]; then

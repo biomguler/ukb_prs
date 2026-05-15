@@ -69,16 +69,21 @@ bash 00_pgs2score.sh <PGS_ID> [BUILD] [OUT_DIR]
 - `[OUT_DIR]` (optional): Output directory path; defaults to current directory
 
 **Examples:**
-```bash
-# Single PGS download
-bash 00_pgs2score.sh PGS000083 GRCh37 scores
 
-# Multiple PGS downloads
+Single PGS download:
+```bash
+bash 00_pgs2score.sh PGS000083 GRCh37 scores
+```
+
+Multiple PGS IDs in a loop:
+```bash
 for PGS_ID in PGS000083 PGS000018 PGS000021; do
   bash 00_pgs2score.sh "$PGS_ID" GRCh37 scores
 done
+```
 
-# From file
+Multiple PGS IDs from a text file (one per line):
+```bash
 while read -r PGS_ID; do
   [ -z "$PGS_ID" ] && continue
   bash 00_pgs2score.sh "$PGS_ID" GRCh37 scores
@@ -87,7 +92,7 @@ done < pgs_ids.txt
 
 **Requirements:**
 - `wget` or `curl` — for downloading files
-- `gzip` — for decompressing
+- `gzip` — for decompressing and validation
 - `awk` — for text processing
 
 **Input:**
@@ -96,7 +101,10 @@ done < pgs_ids.txt
 
 **Output:**
 ```
-scores/PGS000083/PGS000083_beta.csv
+scores/PGS000083/
+├── PGS000083_beta.csv         # Main output: formatted beta file
+├── PGS000083_hmPOS_GRCh37.txt.gz  # Downloaded raw file
+└── PGS000083_pgs2score.log    # Processing log with QC stats
 ```
 
 **Output Format:**
@@ -108,15 +116,27 @@ rs7654321,2,87654321,T,C,-0.089,0.32,2:87654321
 
 **Quality Control:**
 - Validates gzip format of downloaded file
+- Checks for valid gzip integrity before processing
 - Skips variants with missing required fields (rsID, position, alleles, beta)
 - Removes accidental carriage returns (CR) from Windows-formatted files
 - Uses harmonized positions (hm_chr, hm_pos, hm_rsID) when available
-- Reports number of variants written vs. skipped
+- Validates output: reports error if converted file is empty
+- Reports number of variants written vs. skipped in log file
+- Shows preview of first few rows for quick validation
+
+**Output Validation:**
+The script performs final validation after conversion:
+- Counts rows in output beta file
+- Reports total variant count
+- Shows file preview (first few rows)
+- Logs all metrics to `<PGS_ID>_pgs2score.log`
 
 **Notes:**
 - Requires EBI Harmonized PGS Catalog access
 - Supports both GRCh37 (hg19) and GRCh38 (hg38) builds
 - Pre-harmonized variants avoid allele mismatch issues
+- Skipped downloads if file already exists (add `-f` flag to force re-download)
+- All output logged to `<PGS_ID>_pgs2score.log` for troubleshooting
 
 ---
 
