@@ -9,7 +9,7 @@
 # load models if needed
 
 # set working dir
-
+# to submit job use : bsub < example.bsub -R "rusage[mem=16GB]"
 cd /omics/groups/OE0136/internal/private/Murat/test_tmp/prs_git/ukb_prs
 
 bash 02_dkfz_ukbb_prs_runner.sh
