@@ -38,7 +38,7 @@ for BETAFILE in "${beta_files[@]}"; do
   OUT_DIR="$OUT_DIR" \
   bash "$CORE_SCRIPT" \
     > "logs/${TRAIT_NAME}.prs.log" \
-    2> "logs/${TRAIT_NAME}.prs.err"
+    2> "logs/${TRAIT_NAME}.prs.out"
 
   echo "Finished trait: $TRAIT_NAME"
 done
